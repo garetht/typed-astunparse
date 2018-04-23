@@ -255,7 +255,7 @@ class Unparser(astunparse.Unparser):
                 comma = True
             self.dispatch(base)
 
-        if self.is_python_three():
+        if self.is_python_3():
             for keyword in t.keywords:
                 if comma:
                     self.write(", ")
