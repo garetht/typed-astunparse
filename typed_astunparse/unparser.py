@@ -1,11 +1,13 @@
 """Class: Unparser."""
 
 import ast
+import sys
 
 import astunparse
 from astunparse.unparser import interleave
 from six.moves import cStringIO
 import typed_ast.ast3
+import typed_ast.ast27
 
 
 def strip_delimiters(text: str):
@@ -190,7 +192,12 @@ class Unparser(astunparse.Unparser):
 
     """
 
-    boolops = {typed_ast.ast3.And: 'and', typed_ast.ast3.Or: 'or'}
+    boolops = {
+        typed_ast.ast3.And: 'and',
+        typed_ast.ast3.Or: 'or',
+        typed_ast.ast27.And: 'and',
+        typed_ast.ast27.Or: 'or'
+    }
     """Mapping from boolean operation node to its string representation.
 
     This overrides of base class dict, because {ast.And: 'and', ast.Or: 'or'} obviously causes
@@ -198,6 +205,19 @@ class Unparser(astunparse.Unparser):
     """
 
     boolops.update(astunparse.Unparser.boolops)
+
+    def __init__(self, tree, file=sys.stdout):
+        super(Unparser, self).__init__(tree, file=file)
+
+    def is_python_2(self):
+        return True
+
+    def is_python_3(self):
+        return False
+
+    def python_version(self):
+        return sys.version_info(major=2, minor=7, micro=0, releaselevel='final', serial=0)
+
 
     def _write_string_or_dispatch(self, value):
         """If value is str, write it. Otherwise, dispatch it."""
@@ -234,12 +254,14 @@ class Unparser(astunparse.Unparser):
             else:
                 comma = True
             self.dispatch(base)
-        for keyword in t.keywords:
-            if comma:
-                self.write(", ")
-            else:
-                comma = True
-            self.dispatch(keyword)
+
+        if self.is_python_three():
+            for keyword in t.keywords:
+                if comma:
+                    self.write(", ")
+                else:
+                    comma = True
+                self.dispatch(keyword)
         self.write(")")
         self.enter()
         self.dispatch(t.body)

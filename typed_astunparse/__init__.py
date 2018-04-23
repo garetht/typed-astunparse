@@ -7,6 +7,7 @@ import ast
 import typing as t
 
 import typed_ast.ast3
+import typed_ast.ast27
 from six.moves import cStringIO
 
 from .unparser import Unparser
@@ -16,7 +17,7 @@ from ._version import VERSION
 __version__ = VERSION
 
 
-def unparse(tree: t.Union[ast.AST, typed_ast.ast3.AST]) -> str:
+def unparse(tree: t.Union[ast.AST, typed_ast.ast27.AST, typed_ast.ast3.AST]) -> str:
     """Unparse the abstract syntax tree into a str.
 
     Behave just like astunparse.unparse(tree), but handle trees which are typed, untyped, or mixed.
