@@ -218,7 +218,6 @@ class Unparser(astunparse.Unparser):
     def python_version(self):
         return sys.version_info(major=2, minor=7, micro=0, releaselevel='final', serial=0)
 
-
     def _write_string_or_dispatch(self, value):
         """If value is str, write it. Otherwise, dispatch it."""
         if isinstance(value, str):
@@ -490,10 +489,11 @@ class Unparser(astunparse.Unparser):
                     self.write(' ')
             self.write("*")
             if t.vararg:
-                self.write(t.vararg.arg)
-                if t.vararg.annotation:
-                    self.write(": ")
-                    self.dispatch(t.vararg.annotation)
+                if hasattr(t.vararg, 'arg'):
+                    self.write(t.vararg.arg)
+                    if t.vararg.annotation:
+                        self.write(": ")
+                        self.dispatch(t.vararg.annotation)
                 latest_comment = getattr(t.vararg, 'type_comment', None)
 
         # keyword-only arguments

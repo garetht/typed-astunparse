@@ -29,7 +29,7 @@ def unparse(tree: t.Union[ast.AST, typed_ast.ast27.AST, typed_ast.ast3.AST]) -> 
 
 
 def dump(
-        tree: t.Union[ast.AST, typed_ast.ast3.AST], annotate_fields: bool = True,
+        tree: t.Union[ast.AST, typed_ast.ast27.AST, typed_ast.ast3.AST], annotate_fields: bool = True,
         include_attributes: bool = False) -> str:
     """Behave just like astunparse.dump(tree), but handle typed_ast.ast3-based trees."""
     stream = cStringIO()
