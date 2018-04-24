@@ -524,7 +524,8 @@ class Unparser(astunparse.Unparser):
                     latest_comment = None
                 else:
                     self.write(' ')
-            self.write("**"+t.kwarg.arg)
+            if hasattr(t.kwarg, 'arg'):
+                self.write("**"+t.kwarg.arg)
             if t.kwarg.annotation:
                 self.write(": ")
                 self.dispatch(t.kwarg.annotation)
